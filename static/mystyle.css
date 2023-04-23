@@ -1,0 +1,22 @@
+body {
+    text-align: center;
+    color: black;
+    background-color: bisque;
+    vertical-align: middle ;
+    font-family: 'Abyssinica SIL', serif;
+    /* border: 2px solid red ;  */
+}
+
+input {
+    text-align: center;
+    color: black;
+    background-color: bisque;
+    border-radius: 10px;
+    padding: 5px;
+    border: 2px solid rgb(149, 25, 231) ;
+}
+
+h1 {
+    margin-top: 3vw;
+    margin-bottom: 3vw;
+}

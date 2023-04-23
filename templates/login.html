@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/mystyle.css">
+    
+    <style>
+       
+
+        #header {
+            color: white;
+        }
+
+        #description {
+            /* border: 2px solid red ; */
+            width: auto;
+            margin: auto;
+            padding: 20px;
+            color: rgb(97, 87, 87);
+        }
+
+        .mb-3 {
+            /* border: 2px solid red ; */
+            background-color: rgb(145, 107, 176);
+            width: 400px;
+            margin: auto;
+            padding: 10px;
+            font-size: 1.5em;
+            border-radius: 20px;
+            border: 2px solid black ;
+            box-shadow: 10px 10px 5px rgb(199, 177, 217);
+        }
+
+        #register {
+            /* border: 2px solid red ; */
+            width: auto;
+            margin: auto;
+            padding: 5px;
+            color: rgb(97, 87, 87);
+            /* border: 2px solid red ; */
+        }
+
+        #login {
+            /* border: 2px solid red ; */
+            width: auto;
+            margin: auto;
+            padding: 5px;
+            color: rgb(97, 87, 87);
+        }
+        h1{
+            margin-top: 2vw;
+        }
+    </style>
+</head>
+
+<body id="all">
+    <h1>Kanban App</h1>
+    <h3 id="description"> Manage Tasks efficiently. </h3>
+
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+
+    {% for message in messages %}
+    <!-- <ul>
+        <li id="flash">{{ message }}</li>
+    </ul> -->
+    <h6>!!!!!{{ message }}!!!!!</h6>
+
+    {% endfor %}
+
+    {% endif %}
+    {% endwith %}
+
+    <!-- <img src='back.jpg' alt="Trulli" width="500" height="333"> -->
+
+
+
+
+
+    <div class="mb-3">
+        <!-- <div id="header">
+            <h4>LOGIN</h4>
+        </div> -->
+        <form action="/" method="POST" id="forms" name="hi">
+            <div>
+                <label for=""> Username</label>
+                <input type="text" , name="username" required />
+
+            </div>
+            <div>
+                <label for=""> Password</label>
+                <input type="password" name="password" , minlength="8" required />
+
+            </div>
+             <div id="login">
+                <input type="Submit" value="Login" class="btn btn-danger btn-lg">
+            </div>
+            <div id="register">
+                <div><a href="/register" class="btn btn-success btn-lg">Register</a>    </div>
+            </div> 
+
+
+        </form>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

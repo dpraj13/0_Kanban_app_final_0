@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Antic' rel='stylesheet'>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+    crossorigin="anonymous"></script>
+  <style>
+    body {
+      text-align: center;
+      color: black;
+      background-color: bisque;
+      vertical-align: middle;
+      font-family: 'Abyssinica SIL', serif;
+      /* border: 2px solid red ;  */
+    }
+
+    .navbar {
+      /* border: 2px solid red; */
+      background-color: rgb(216, 196, 233);
+    }
+
+    .col {
+      max-width: 29vw;
+      border: 2px solid rgb(2, 0, 3);
+      text-align: center;
+      background-color: rgb(173, 134, 205);
+      border-radius: 30px;
+      padding: 5px;
+      margin: 20px;
+      /* padding-top: -5px; */
+      box-shadow: 10px 10px 5px rgb(199, 177, 217);
+      height: fit-content;
+
+
+
+    }
+
+    #list_header {
+      /* border: 2px solid red; */
+      margin: 20px;
+      padding: 10px;
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+
+    }
+
+    a:hover {
+      color: black;
+    }
+
+    .list-button {
+      margin: .2vw;
+    }
+
+    #Cards {
+      border: 2px solid red;
+    }
+
+    .card {
+      /* margin-left: 2vw; */
+      border: 1vw solid violet;
+      margin: 0.5vw;
+      /* padding: -5vw; */
+      box-shadow: 10px 10px 5px rgb(60, 46, 73);
+      /* align-self: center;
+      vertical-align: middle; */
+      background-color: bisque;
+    }
+
+    .c-button {
+      margin: .2vw;
+    }
+
+    .incomplete-button {
+      background-color: rgb(242, 14, 14);
+    }
+
+    .edit-card {
+      size: 10vw;
+    }
+
+    #card-ops {
+      inline-size: auto;
+    }
+
+    span.a {
+      display: inline;
+      /* the default for span */
+      padding: 1vw;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      position: absolute;
+      right: -5px;
+      top: -5px;
+      margin-top: .5vw;
+      margin-right: 1vw;
+    }
+
+    .icon1 {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      position: absolute;
+      left: -5px;
+      top: -5px;
+      margin-top: .5vw;
+      margin-left: 1vw;
+    }
+
+    li {
+      text-align: center;
+    }
+
+    .dropdown-meu {
+      color: black;
+      background-color: bisque;
+      border: bisque;
+    }
+
+    .dropdown {
+      margin-top: .2vw;
+    }
+    .download{
+      padding:.5vw;
+      margin:0.5vw;
+    }
+    .download:hover{
+      color: white;
+    }
+    
+    .list-button{
+      color: black;
+    }
+    .c-update{
+      background-color: rgb(60, 55, 55);
+    }
+    hr.new1 {
+      border-top: 3px solid rgb(60, 55, 55);
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1 id="welcome">Welcome {{ b_name }}</h1>
+  
+
+  <nav class="navbar navbar-expand-lg bg">
+    <div class="container-fluid">
+      <a href="/{{ user_id}}/list/create" class="btn btn-outline-dark btn-lg list-button">Create New List</a>
+      <a href="/{{ user_id}}/summary" class="btn btn-outline-dark btn-lg list-button">Summary</a>
+      <a href="/{{ user_id}}/list/upload" class="btn btn-outline-dark btn-lg list-button">Upload List</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <form class="d-flex" role="search" ame="form1" method="get" action="/">
+          <button class="btn btn-outline-dark btn-lg list-button" type="submit">LogOut</button>
+        </form>
+
+
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="grid text-center">
+    <div class="row ">
+      {% for list in lists %}
+      <div class="col flex-container ">
+             
+        <div id="list_header">
+        <h1>{{ lists.index(list)+1 }}. {{ list["name"] }}</h1>
+        <hr class="new1">
+        <details><h3>{{ list["description"] }} </h3></details>
+          
+          <hr class="new1">
+          <!-- {{ list["list_id"]}} -->
+
+
+
+          <!-- <a href="/{{ user_id }}/card/{{ list[" list_id"] }}/create" class="btn btn-secondary">Add New Card</a> -->
+
+          <a href="/{{ user_id }}/card/{{ list["list_id"]}}/create"> <button type="button" class="btn btn-success list-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus"
+              viewBox="0 0 16 16">
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z">
+              </path>
+            </svg>
+             New Card
+          </button></a>
+
+          <!-- <a href="/{{ user_id }}/list/{{ list[" list_id"] }}/update" class="btn btn-secondary">Update List</a> -->
+          <a href="/{{ user_id }}/list/{{ list["list_id"]}}/update"><button type="button" class="btn btn-primary list-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z">
+              </path>
+              <path fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z">
+              </path>
+            </svg> UPDATE
+          </button></a>
+
+          <!-- <a href="/{{ user_id }}/list/{{ list[" list_id"] }}/delete" class="btn btn-secondary">Delete List</a> -->
+          <a href="/{{ user_id }}/list/{{ list["list_id"]}} /delete"><button type="button" class="btn btn-danger list-button ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+              viewBox="0 0 16 16">
+              <path
+                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z">
+              </path>
+              <path fill-rule="evenodd"
+                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z">
+              </path>
+            </svg>
+            DELETE
+          </button></a>
+
+          <!-- <a href="/{{ user_id }}/list/{{ list[" list_id"] }} /download">DOWNLOAD List</a> -->
+          <a href="/{{ user_id }}/list/{{ list["list_id"]}}/download"> <button type="button" class="btn btn-warning download">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+              viewBox="0 0 16 16">
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+              </path>
+              <path
+                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z">
+              </path>
+            </svg>
+            DOWNLOAD List
+          </button></a>
+
+        </div>
+
+        <hr class="new1">
+        <h3>Cards</h3>
+
+        {% for card in list["cards"] %}
+        <div id="card-div">
+          <div class="card" style="width:25vw">
+            <div class="card-body">
+              <h4 class="card-title">{{ card.title }}</h4>
+              <hr class="new1">
+              <p class="card-text">{{card.content}}</p>
+              <hr class="new1">
+              <button type="button" class="btn btn-info c-button">Deadline : {{card.deadline}} </button>
+              {% if card.update != None %}
+                  <button type="button" class="btn btn-dark c-button c-update">Updated : {{card.update}} </button>
+              {% endif %}
+
+              {% if not loop.last %}{% endif %}
+              {% if card.complete==0 %}<br>
+              <a href="/card/{{ list["list_id"]}}/{{ card.card_id }}/complete"
+                class="btn btn-danger c-button incomplete-button">Status :
+                Incomplete</a>
+              {% else %}
+              <a href="/card/{{ list["list_id"]}}/{{ card.card_id }}/incomplete"
+                class="btn btn-success c-button">Completed at {{ (card.complete)[0:10] }}</a>
+
+              {% endif %}
+
+
+              {% if length>1 %}
+              <div class="dropdown">
+                <a class="btn btn-warning dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">Move Card</a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  {% for lt in lists %}
+                  {% if not list["name"]==lt["name"] %}
+                  <li><a class="dropdown-item" href="/{{ user_id }}/card/{{ lt["list_id"]}}/{{ card.card_id }}/move">{{ lt["name"] }}</a></li>
+                  {% endif %}
+                  {% endfor %}
+
+
+                </ul>
+              </div>
+              {% endif %}
+
+              <div id="card-ops">
+
+                <!-- <a class="btn btn-primary c-button" role="button" href="/{{ user_id }}/card/{{ list["list_id"] }}/{{ card.card_id }}/delete">Delete Card</a> -->
+                <span class="a">
+                  <a class="delete-card icon" role="button" href="/{{ user_id }}/card/{{ list["list_id"]}}/{{
+                    card.card_id }}/delete"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                      fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                      <path
+                        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                    </svg></a>
+                </span>
+
+                <span class="a">
+                  <!-- <a href="/{{ user_id }}/card/{{ list["list_id"] }}/{{ card.card_id }}/update" class="btn btn-secondary c-button">Update Card</a> -->
+
+                  <a class="update-card icon1" href="/{{ user_id }}/card/{{ list["list_id"]}}/{{ card.card_id
+                    }}/update" role="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                      class="bi bi-pencil" viewBox="0 0 16 16">
+                      <path
+                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z">
+                      </path>
+                    </svg>
+                  </a>
+
+                </span>
+
+
+              </div>
+
+
+
+
+
+              <!-- {% if length>1 %}
+                                          Move Card
+                                          {% for lt in lists %} 
+                                              {% if not list["name"]==lt["name"] %}
+                                          <a href="/{{ user_id }}/card/{{ lt["list_id"] }}/{{ card.card_id }}/move" >{{ lt["name"] }}</a>
+                                              {% endif %}
+                                          {% endfor %}
+                                          {% endif %}    -->
+
+              <!-- {% if length>1 %}
+                                          <div class="dropdown">
+                                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Move Card</a>
+                                            <ul class="dropdown-menu">
+                                              {% for lt in lists %} 
+                                              {% if not list["name"]==lt["name"] %}
+                                              <li><a class="dropdown-item" href="/{{ user_id }}/card/{{ lt["list_id"] }}/{{ card.card_id }}/move" >{{ lt["name"] }}</a></li>
+                                              {% endif %}
+                                              {% endfor %}
+                                            
+                                              
+                                            </ul>
+                                          </div>
+                                          {% endif %}
+           -->
+
+
+
+
+
+
+
+
+
+
+            </div>
+          </div>
+
+        </div> {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
+
+
+</body>
+
+</html>

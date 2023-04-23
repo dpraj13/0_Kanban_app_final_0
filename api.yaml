@@ -1,0 +1,1040 @@
+openapi: 3.0.3
+info:
+  title: Kanban App - OpenAPI 3.0
+  description: |-
+    A kanban board is one of the tools that can be used to implement kanban to manage work at a personal or organizational level.
+
+    <h2>Error Codes.<h2>
+    <h3>User operations.<h3> <table>
+    <thead>
+      
+      <th>Error Code</th>
+      <th>Message</th>
+      <tbody>
+      <tr>
+        <td>BE1001</td>
+        <td>Username is required</td>
+       </tr>
+       <tr>
+        <td>BE1002</td>
+        <td>Password is required</td>
+       </tr>
+       <tr>
+        <td>BE1003</td>
+        <td>Name is required</td>
+       </tr>
+       <tr>
+        <td>BE1004</td>
+        <td>User Not Found</td>
+       </tr>
+       <tr>
+        <td>SE1001</td>
+        <td>Invalid password. Password should contain atleast 8 characters</td>
+       </tr>
+       <tr>
+        <td>SE1002</td>
+        <td>Username already exist</td>
+       </tr>
+       <tr>
+        <td>SE1003</td>
+        <td>Incorrect password</td>
+       </tr>
+      </tbody>
+     </table>
+     
+     
+     <h3>List operations.<h3> 
+     <table>
+      <thead>
+        <th>Error Code</th>
+        <th>Message</th>
+        <tbody>
+         <tr>
+          <td>BE2001</td>
+          <td>User does not have any list.</td>
+         </tr>
+         <tr>
+          <td>BE2002</td>
+          <td>List does not belong to user.</td>
+         </tr>
+         <tr>
+          <td>SE2001</td>
+          <td>List does not exist.</td>
+         </tr>
+         <tr>
+          <td>SE2002</td>
+          <td>List with similar name exist.</td>
+         </tr>
+        </tbody>
+     </table>
+     
+     
+     <h3>Card operations. </h3>
+     <table>
+      <thead>
+        <th>Error Code</th>
+        <th>Message</th>
+        <tbody>
+         <tr>
+          <td>BE3001</td>
+          <td>List does not have any Card.
+         </tr>
+         <tr>
+          <td>BE3002</td>
+          <td>List does not have any Card.</td>
+         </tr>
+          <tr>
+          <td>BE3003</td>
+          <td>Card does not belong to list.</td>
+         </tr>
+         <tr>
+          <td>BE3004</td>
+          <td>Deadline before Start date.</td>
+         </tr>
+         <tr>
+          <td>BE3005</td>
+          <td>Complete date before Start date.</td>
+         </tr>
+         <tr>
+          <td>BE3006</td>
+          <td>NO CARD IS YET COMPLETED</td>
+         </tr>
+         <tr>
+          <td>BE3007</td>
+          <td>Atleast two cards need to be completed</td>
+         </tr>
+         <tr>
+          <td>BE3008</td>
+          <td>Card with Similar Name Exists in same list</td>
+         </tr>
+         <tr>
+          <td>SE3001</td>
+          <td>Card does not exist.</td>
+         </tr>
+         <tr>
+          <td>SE3002</td>
+          <td>Incorrect date format.</td>
+         </tr>
+        </tbody>
+       </table>
+
+  version: 1.0.11
+ 
+      
+
+servers:
+  - url: http://127.0.0.1:8080 
+paths:
+  /api/user/login:
+    get:
+        tags:
+          - User  
+        summary: Login  
+        description: Login
+        operationId: login_user
+        parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: True
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: True
+          schema:
+            type: string           
+        responses:
+          '200':
+            description: Successfully logged In 
+            content:
+              application/json:
+                schema:
+                    properties:
+                      user_id:
+                        type: integer
+                        format: int64
+                        example: 10
+                      name:
+                        type: string
+                        format: username
+                        example: Dhairyasheel Patil
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: User does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error           
+  /api/user/register:            
+    post:
+        tags:
+          - User 
+        summary: Add a new user 
+        description: Add a new user
+        operationId: register_user
+        requestBody:
+          description: Create a new user
+          content:
+            application/json:
+              schema:
+                    title: user object
+                    type: object
+                    properties:
+                            name:
+                              type: string
+                              format: username
+                              example: Dhairyasheel Patil
+                            username:
+                              type: string
+                              format: username
+                              example: dpraj13
+                            password:
+                              type: string
+                              format: password
+                              example: dpraj@13
+                              
+        responses:
+          '200':
+            description: Successful Created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Users'
+          '400':
+            description: BAD REQUEST
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '409':
+            description: username already exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string            
+          '500':
+            description: Internal Server Error           
+  /api/user/{username}: 
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: Delete user using his username.
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The username of user that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+            description: Successfully Deleted
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found 
+  /api/all_lists:
+    get:
+        tags:
+          - List
+        summary: Get all lists for user
+        description: Get details of all lists.
+        operationId: all_lists
+        parameters:
+        - name: user_id
+          in: query
+          description: User ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Lists'
+                      
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: User does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+  /api/list:
+    get:
+        tags:
+          - List
+        summary: Read/Get list details by list_id. 
+        description: Get details of a list.
+        operationId: get_list
+        parameters:
+        - name: list_id
+          in: query
+          description: List ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/Lists'
+          '404':
+            description: list does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+    put:
+          tags:
+            - List
+          summary: Update a existing list. 
+          description: Update a existing list.
+          operationId: put_list
+          requestBody:
+            description: Update List
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Lists'
+          responses:
+            '200':
+              description: successful operation
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Lists'
+            '400':
+              description: Bad Request
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+
+            '404':
+              description: list does not exists
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+            '500':
+              description: Internal Server Error
+    post:
+          tags:
+            - List
+          summary: Create a new list. 
+          description: Create a new list.
+          operationId: create_list
+          requestBody:
+            content:
+              application/json:
+                schema:
+                      title: Lists object
+                      type: object
+                      properties:
+                        l_user_id:
+                          type: integer
+                          format: int64
+                          example: 10
+                        name:
+                          type: string
+                          example: To do list
+                        description:
+                          type: string
+                          example: tasks that are yet to be completed
+                   
+          responses:
+            '200':
+              description: successful operation
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Lists'
+            '400':
+              description: Bad Request
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+
+            '404':
+              description: User Not Found.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+            '500':
+              description: Internal Server Error
+    delete:
+      tags:
+        - List
+      summary: Deletes a list
+      description: delete a list
+      operationId: deletelist
+      parameters:
+        - name: list_id
+          in: query
+          description: List ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid list value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+                    
+  /api/all_cards_by_user:
+    get:
+        tags:
+          - Card
+        summary: Get all cards for user
+        description: Get details of all cards.
+        operationId: all_cards
+        parameters:
+        - name: user_id
+          in: query
+          description: User ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Cards'
+                      
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: User does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+  /api/all_cards_by_list:
+    get:
+        tags:
+          - Card
+        summary: Get all cards by list
+        description: Get details of all cards.
+        operationId: all_cards_by_list
+        parameters:
+        - name: list_id
+          in: query
+          description: list ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Cards'
+                      
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: List does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+  /api/card:
+    get:
+        tags:
+          - Card
+        summary: Read/Get card details by card_id. 
+        description: Get details of a Card.
+        operationId: get_card
+        parameters:
+        - name: card_id
+          in: query
+          description: card ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/Cards'
+          '404':
+            description: Card does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+    put:
+          tags:
+            - Card
+          summary: Update/Move a existing Card. 
+          description: Update/Move a existing Card.
+          operationId: put_card
+          requestBody:
+            description: Update Card
+            content:
+              application/json:
+                  schema:
+                      $ref: '#/components/schemas/Cards'
+
+          responses:
+            '200':
+              description: successful operation
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Cards'
+            '400':
+              description: Bad Request
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+
+            '404':
+              description: card does not exists
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+            '500':
+              description: Internal Server Error
+    post:
+          tags:
+            - Card
+          summary: Create a new card. 
+          description: Create a new card.
+          operationId: create_card
+          requestBody:
+            content:
+              application/json:
+                schema:
+                      title: Cards object
+                      type: object
+                      properties:
+                        c_list_id:
+                          type: integer
+                          format: int64
+                          example: 10
+                        title:
+                          type: string
+                          example: Api completion
+                        content:
+                          type: string
+                          example: completing api document 
+                        start:
+                          type: string
+                          example: 2022-07-29
+                        deadline:
+                          type: string
+                          example: 2022-07-29
+                        complete:
+                          type: string
+                          example: 2022-07-29
+                        
+                   
+          responses:
+            '200':
+              description: successful operation
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Cards'
+            '400':
+              description: Bad Request
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+
+            '404':
+              description: List Not Found.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error_code:
+                        type: string
+                      error_message:
+                        type: string
+            '500':
+              description: Internal Server Error
+    delete:
+      tags:
+        - Card
+      summary: Deletes a card
+      description: Delete a card
+      operationId: deletecard
+      parameters:
+        - name: card_id
+          in: query
+          description: CARD ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Card Not Found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+  /api/stats:
+    get:
+        tags:
+          - Stats
+        summary: Get summary of cards by list_id. 
+        description: Get summary of cards by list_id. 
+        operationId: get_bar_plot
+        parameters:
+        - name: list_id
+          in: query
+          description: List ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/Summary'
+          '404':
+            description: list does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+  /api/timeline:
+    get:
+        tags:
+          - Timeline
+        summary: Timeline for completion of Cards. 
+        description: Timeline for completion of Cards. 
+        operationId: timeline
+        parameters:
+        - name: user_id
+          in: query
+          description: User ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Timeline'
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: User Not Found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+  /api/stats/image:
+    get:
+        tags:
+          - Bar Chart Image
+        summary: Get summary of cards by list_id. 
+        description: Get summary of cards by list_id. 
+        operationId: get_bar_plot_img
+        parameters:
+        - name: list_id
+          in: query
+          description: List ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+#                     $ref: '#/components/schemas/Summary'
+                      type: object
+          '404':
+            description: list does not exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+
+          '500':
+            description: Internal Server Error
+            
+  /api/trendline:
+    get:
+        tags:
+          - Trendline Image
+        summary: Trendline chart for completion of Cards. 
+        description: Trendline chart for completion of Cards. 
+        operationId: trendline
+        parameters:
+        - name: user_id
+          in: query
+          description: User ID
+          required: True
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: object
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '404':
+            description: User Not Found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_code:
+                      type: string
+                    error_message:
+                      type: string
+          '500':
+            description: Internal Server Error
+
+
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          format: username
+          example: Dhairyasheel Patil
+        username:
+          type: string
+          format: username
+          example: dpraj13
+        password:
+          type: string
+          format: password
+          example: dpraj@13
+       
+    Lists:
+      type: object
+      properties:
+        list_id:
+          type: integer
+          format: int64
+          example: 10
+        l_user_id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: To do list
+        description:
+          type: string
+          example: tasks that are yet to be completed
+    Cards:
+      type: object
+      properties:
+        card_id:
+          type: integer
+          format: int64
+          example: 10
+        c_list_id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Api completion
+        content:
+          type: string
+          example: completing api document 
+        start:
+          type: string
+          example: 2022-07-29
+        deadline:
+          type: string
+          example: 2022-07-29
+        complete:
+          type: string
+          example: 2022-07-29
+    Summary:
+      type: object
+      properties:
+        Total_cards:
+          type: integer
+          format: int64
+          example: 10
+        Completed_cards:
+          type: integer
+          format: int64
+          example: 5
+        Incomplete_cards:
+          type: integer
+          format: int64
+          example: 5
+        Cards whose deadline has passed:
+          type: integer
+          format: int64
+          example: 3
+    Timeline:
+      type: object
+      properties:
+        time:
+            type: string
+            example: 2022-07-2
+        no_of_completed_cards:
+          type: integer
+          format: int64
+          example: 1
+          
+       
+        
+    
